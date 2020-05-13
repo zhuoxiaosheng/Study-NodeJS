@@ -1,0 +1,123 @@
+// 1、数组不能进行二进制数据的操作
+// 2、js数组不能像java、Python等语言效率高
+// 3、buffer内存空间开辟出固定大小内存
+
+let str = '你好！';
+let buf = Buffer.from(str)
+console.log(buf);
+console.log('输出：' + buf.toString());// 导入文件模版
+let fs = require('fs');
+
+// 同步
+const txt = fs.readFileSync('./test.txt', { flag: 'r', encoding: 'utf-8' });
+console.log(txt);
+// 异步
+// fs.readFile('./test.txt', { flag: 'r', encoding: 'utf-8' }, function(err, res) {
+//     if (err) {
+//         console.log('报错～');
+//         return true;
+//     }
+//     console.log(res)
+//     console.log('异步-后执行');
+
+// })
+// console.log('异步-我先执行');
+
+function ReadFs(path) {
+    return new Promise(function(resolve, reject) {
+        fs.readFile(path, { flag: 'r', encoding: 'utf-8' }, function(err, res) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(res)
+            }
+        })
+    })
+}
+
+ReadFs('./test.txt').then(res => {
+    console.log(res)
+})
+
+async function ReadList() {
+    let file = await ReadFs('./t1.txt')
+    console.log(file)
+    let file2 = await ReadFs(file + '.txt')
+    console.log(file2)
+    let file3 = await ReadFs(file2 + '.txt')
+    console.log(file3)
+}
+ReadList()const fs = require('fs');
+// r 读取 w 写入 a 追加
+fs.writeFile('./test.txt', '不试试怎么知道自己不ok？\n', { flag: "w", encoding: "utf-8" }, function(err) {
+    if (err) {
+        console.log('写入失败');
+
+    } else {
+        console.log('写入success');
+    }
+})
+
+function write(path, content) {
+    return new Promise(function(resolve, reject) {
+        fs.writeFile(path, content, { flag: 'a', encoding: 'utf-8' }, function(err) {
+            if (err) {
+                reject()
+            } else {
+                console.log('成功')
+                resolve()
+            }
+        })
+    })
+}
+async function writeList() {
+    let path = './test.txt';
+    await write(path, '你好；在坚持坚持！！！\n')
+    await write(path, '学习使我快乐\n')
+}
+writeList()const fs = require('fs');
+fs.unlink('删除.txt', function() {
+    console.log('删除成功')
+})// 读取文件夹
+const fs = require('fs');
+
+fs.readdir('../fs', function(err, files) {
+    if (err) {
+        console.log('文件夹不存在~')
+        return true;
+    }
+    files.forEach(async(item, index) => {
+        // console.log(item)
+        let content = await ReadFs('../fs/' + item)
+            // console.log(content)
+        await WriteFs('./all.txt', content)
+    });
+})
+
+// 读取文件内容
+function ReadFs(path) {
+    return new Promise(function(resolve, reject) {
+        fs.readFile(path, { flag: 'r', encoding: 'utf-8' }, function(err, res) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(res)
+            }
+        })
+    })
+}
+
+// 写入文件
+function WriteFs(path, content) {
+    return new Promise(function(resolve, reject) {
+        fs.writeFile(path, content, { flag: 'a', encoding: 'utf-8' }, function(err, res) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(res)
+            }
+        })
+    })
+}t2t3文本三不试试怎么知道自己不ok？
+你好；在坚持坚持！！！
+学习使我快乐
